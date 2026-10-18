@@ -34,8 +34,9 @@ jobs:
           curl -fsSL "https://raw.githubusercontent.com/arduino/arduino-cli/v${ARDUINO_CLI_VERSION}/install.sh" | BINDIR="$HOME/.local/bin" sh -s "$ARDUINO_CLI_VERSION"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.local/bin:$PATH"
-          arduino-cli core update-index
+          arduino-cli core update-index --additional-urls http://drazzy.com/package_drazzy.com_index.json
           arduino-cli core install arduino:avr@1.8.8
+          arduino-cli core install ATTinyCore:avr@1.5.2 --additional-urls http://drazzy.com/package_drazzy.com_index.json
           arduino-cli lib install "Servo@1.3.0" "LiquidCrystal@1.0.7" "Stepper@1.1.3" \
             "Adafruit GFX Library@1.12.6" "Adafruit BusIO@1.17.4" "Adafruit SSD1306@2.5.17" "TM1637@1.2.0" "LedControl@1.0.6" \
             "DHT sensor library@1.4.7" "Adafruit Unified Sensor@1.1.15" "Adafruit NeoPixel@1.15.5" "OneWire@2.3.8" "DallasTemperature@4.0.6"
@@ -56,11 +57,11 @@ jobs:
           D=wasm/build/dist
           tar czf "$D/source-gnu-toolchain.tar.gz" -C wasm/build/src $(cd wasm/build/src && ls *.tar.*) -C "$GITHUB_WORKSPACE" wasm/*.sh LICENSE
           DATA="$(arduino-cli config get directories.data)"; USERDIR="$(arduino-cli config get directories.user)"
-          tar czf "$D/source-arduino-core-and-libraries.tar.gz" -C "$DATA/packages/arduino/hardware/avr" 1.8.8 -C "$USERDIR" libraries -C "$GITHUB_WORKSPACE/server" libraries
+          tar czf "$D/source-arduino-core-and-libraries.tar.gz" -C "$DATA/packages/arduino/hardware" avr -C "$DATA/packages/ATTinyCore/hardware" avr -C "$USERDIR" libraries -C "$GITHUB_WORKSPACE/server" libraries
           cat > "$D/SOURCES.md" <<'EOF'
           Corresponding source for this release:
           - source-gnu-toolchain.tar.gz: GNU binutils, GCC, GMP, MPFR and MPC exactly as built, plus the build scripts and patches.
-          - source-arduino-core-and-libraries.tar.gz: the Arduino AVR core and the libraries compiled into the sysroot.
+          - source-arduino-core-and-libraries.tar.gz: the Arduino AVR core, ATTinyCore and the libraries compiled into the sysroot.
           - avr-libc and libgcc in the sysroot are the unmodified builds from Arduino's avr-gcc 7.3.0-atmel3.6.1-arduino7 package
             (sources: https://github.com/arduino/toolchain-avr).
           EOF
