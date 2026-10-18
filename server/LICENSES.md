@@ -10,6 +10,7 @@ components unmodified, with their license texts).
 | avr-gcc / binutils | 7.3.0 / 2.26 (arduino:avr 1.8.8) | GPL-3.0 (+ GCC runtime exception) | Runtime exception: compiled sketches are not GPL |
 | avr-libc | 2.0.0 | BSD-3-Clause | |
 | Arduino AVR core | 1.8.8 | LGPL-2.1 | Includes Wire, SPI, EEPROM, SoftwareSerial |
+| ATTinyCore (Spence Konde) | 1.5.2 | LGPL-2.1 | ATtiny85 core, with its own Wire/SPI/Servo |
 | Servo | 1.3.0 | LGPL-2.1 | |
 | LiquidCrystal | 1.0.7 | LGPL-2.1 | |
 | Stepper | 1.1.3 | LGPL-2.1 | |

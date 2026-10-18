@@ -59,6 +59,11 @@ describe.skipIf(!hasCli)("compile (arduino-cli)", () => {
     expect(r.diagnostics.filter((d) => d.severity === "error")).toEqual([]);
     expect(r.ok).toBe(true);
   }, 120_000);
+  it("builds an ATtiny85 sketch with ATTinyCore", async () => {
+    const r = await compile({ board: "attiny85", files: { "tiny.ino": "void setup(){ pinMode(0, OUTPUT); }\nvoid loop(){ digitalWrite(0, !digitalRead(0)); delay(50); analogWrite(1, analogRead(A1) / 4); }" } });
+    expect(r.ok).toBe(true);
+    expect(r.size!.flashMax).toBe(8192);
+  }, 120_000);
   it("reports errors with line numbers", async () => {
     const r = await compile({ board: "nano", files: { "bad.ino": "void setup(){\n  undefinedThing();\n}\nvoid loop(){}" } });
     expect(r.ok).toBe(false);

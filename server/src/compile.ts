@@ -16,6 +16,7 @@ export const BOARDS = {
   uno: { fqbn: "arduino:avr:uno", name: "Arduino UNO" },
   nano: { fqbn: "arduino:avr:nano:cpu=atmega328", name: "Arduino Nano" },
   atmega328p: { fqbn: "arduino:avr:uno", name: "ATmega328P (16 MHz)" },
+  attiny85: { fqbn: "ATTinyCore:avr:attinyx5:chip=85,clock=8internal", name: "ATtiny85 (8 MHz internal, ATTinyCore)" },
 } as const;
 export type BoardId = keyof typeof BOARDS;
 
