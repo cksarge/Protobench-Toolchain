@@ -98,7 +98,9 @@ export function parseDiagnostics(log: string, sketchDir: string): Diagnostic[] {
 
 function run(cmd: string, args: string[], timeoutMs: number): Promise<{ code: number; out: string }> {
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { stdio: ["ignore", "pipe", "pipe"], env: { ...process.env, ARDUINO_UPDATER_ENABLE_NOTIFICATION: "false" } });
+    // arduino-cli's bundled ctags needs TMPDIR; some launchers (e.g. turbo) don't pass it through
+    const env = { ...process.env, TMPDIR: process.env.TMPDIR || tmpdir(), ARDUINO_UPDATER_ENABLE_NOTIFICATION: "false" };
+    const child = spawn(cmd, args, { stdio: ["ignore", "pipe", "pipe"], env });
     let out = "";
     const add = (b: Buffer) => {
       if (out.length < 200_000) out += b.toString();
@@ -132,9 +134,16 @@ export async function compile(req: CompileRequest, opts: { cli?: string; timeout
   try {
     await mkdir(sketchDir);
     for (const [name, body] of Object.entries(req.files)) await writeFile(join(sketchDir, name), body);
-    const { code, out } = await run(opts.cli ?? "arduino-cli", ["compile", "--no-color", "-b", BOARDS[req.board].fqbn, "--libraries", OWN_LIBRARIES, "--output-dir", outDir, "--warnings", "default", sketchDir], opts.timeoutMs ?? 45_000);
+    const args = ["compile", "--no-color", "-b", BOARDS[req.board].fqbn, "--libraries", OWN_LIBRARIES, "--output-dir", outDir, "--warnings", "default", sketchDir];
+    let { code, out } = await run(opts.cli ?? "arduino-cli", args, opts.timeoutMs ?? 45_000);
+    let diagnostics = parseDiagnostics(out, sketchDir);
+    if (code !== 0 && !diagnostics.length) {
+      // a failure without compiler messages (toolchain/environment problem): rerun verbosely so the log says why
+      ({ code, out } = await run(opts.cli ?? "arduino-cli", [...args, "-v"], opts.timeoutMs ?? 45_000));
+      diagnostics = parseDiagnostics(out, sketchDir);
+      console.error(`[compile] build failed without diagnostics:\n${out.slice(-4000)}`);
+    }
     const log = out.split(root).join("").trim();
-    const diagnostics = parseDiagnostics(out, sketchDir);
     if (code !== 0) return { ok: false, diagnostics, log, ms: Date.now() - started };
     const hex = await readFile(join(outDir, `${ino}.hex`), "utf8");
     const m = SIZE_RE.exec(out);

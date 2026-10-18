@@ -98,4 +98,11 @@ const server = createServer(async (req, res) => {
   }
 });
 
+server.on("error", (e: NodeJS.ErrnoException) => {
+  if (e.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use — another compile server is probably running. Stop it, or set PORT to use a different one.`);
+    process.exit(1);
+  }
+  throw e;
+});
 server.listen(PORT, () => console.log(`protobench-compile listening on :${PORT}`));
