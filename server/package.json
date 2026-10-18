@@ -1,0 +1,16 @@
+{
+  "name": "@protobench/compile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Arduino compile server (arduino-cli) — backup for the in-browser compiler",
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "node --watch src/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0"
+  }
+}
