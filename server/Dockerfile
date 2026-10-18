@@ -1,4 +1,4 @@
-# Protobench compile server (Hugging Face Spaces, Docker SDK). Listens on 7860 as uid 1000.
+# Protobench compile server. Listens on 7860 as an unprivileged user (uid 1000).
 FROM node:24-slim
 
 ARG ARDUINO_CLI_VERSION=1.5.1

@@ -5,7 +5,7 @@ Arduino support:
 
 | Folder | What it is |
 |---|---|
-| [`server/`](server) | The compile server: a small Node service around `arduino-cli` that turns sketches into firmware. Deployed to a Hugging Face Space as the backup for the in-browser compiler. |
+| [`server/`](server) | The compile server: a small Node service around `arduino-cli` that turns sketches into firmware. The backup for the in-browser compiler (used on phones and slow devices). |
 | `wasm/` *(in progress)* | Build scripts that compile avr-gcc and GNU binutils to WebAssembly so sketches compile entirely in the browser. |
 
 ## Licenses
@@ -19,7 +19,3 @@ Arduino core and several libraries are LGPL. See [`server/LICENSES.md`](server/L
 complete list. Corresponding source for every GPL/LGPL component we distribute is published here or
 linked from the build scripts, with exact versions.
 
-## Deploying the compile server
-
-The `deploy-space` workflow uploads `server/` to the Hugging Face Space named in the repository
-variable `HF_SPACE` (for example `your-name/protobench-compile`), using the `HF_TOKEN` secret.

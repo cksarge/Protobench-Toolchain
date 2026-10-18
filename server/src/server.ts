@@ -2,7 +2,7 @@
  * Protobench compile server: POST /compile { board, files } → { ok, hex, diagnostics, … }.
  * The backup for the in-browser compiler; also used during local development.
  *
- * Env: PORT (default 7860, the Hugging Face Spaces port), ALLOWED_ORIGINS (comma list,
+ * Env: PORT (default 7860), ALLOWED_ORIGINS (comma list,
  * default "*"), MAX_CONCURRENT (default 2), ARDUINO_CLI (path to arduino-cli).
  */
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
