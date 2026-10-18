@@ -1,0 +1,20 @@
+name: test-server
+on:
+  push:
+    paths: ["server/**", ".github/workflows/test-server.yml"]
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image (installs the toolchain and libraries)
+        run: docker build -t protobench-compile server
+      - name: Smoke test
+        run: |
+          docker run -d -p 7860:7860 --name pc protobench-compile
+          for i in $(seq 1 30); do curl -sf localhost:7860/health && break; sleep 1; done
+          curl -sf -X POST localhost:7860/compile -H 'content-type: application/json' \
+            -d '{"board":"uno","files":{"blink.ino":"#include <LiquidCrystal_I2C.h>\nLiquidCrystal_I2C lcd(0x27,16,2);\nvoid setup(){pinMode(13,OUTPUT);lcd.init();}\nvoid loop(){digitalWrite(13,!digitalRead(13));delay(500);}"}}' \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['ok'], d.get('size')); sys.exit(0 if d['ok'] else 1)"
