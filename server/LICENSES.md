@@ -24,5 +24,8 @@ components unmodified, with their license texts).
 | Adafruit NeoPixel | 1.15.5 | LGPL-3.0 | |
 | OneWire | 2.3.8 | MIT-style | |
 | DallasTemperature | 4.0.6 | MIT | |
+| Adafruit MPU6050 | 2.2.9 | BSD-3-Clause | |
+| Adafruit BMP280 Library | 3.0.0 | MIT | |
+| RTClib (Adafruit) | 2.1.4 | MIT | |
 | **LiquidCrystal_I2C** | Protobench 1.0.0 | MIT | Our own implementation. The popular library has no license, so it can't be redistributed |
 | **NewPing** | Protobench 1.0.0 | MIT | Our own implementation. NewPing 1.9.x forbids derivative works |

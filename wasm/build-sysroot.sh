@@ -63,7 +63,7 @@ lib_headers attinycore "$TINY_HW/libraries"
 # --- core + libraries compiled without LTO, per variant -----------------------------------
 NOLTO_C='-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD'
 NOLTO_CPP='-c -g -Os {compiler.warning_flags} -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD'
-HEADERS="Wire.h SPI.h EEPROM.h SoftwareSerial.h Servo.h LiquidCrystal.h Stepper.h LiquidCrystal_I2C.h Adafruit_GFX.h Adafruit_SSD1306.h TM1637Display.h LedControl.h DHT.h Adafruit_NeoPixel.h OneWire.h DallasTemperature.h NewPing.h"
+HEADERS="Wire.h SPI.h EEPROM.h SoftwareSerial.h Servo.h LiquidCrystal.h Stepper.h LiquidCrystal_I2C.h Adafruit_GFX.h Adafruit_SSD1306.h TM1637Display.h LedControl.h DHT.h Adafruit_NeoPixel.h OneWire.h DallasTemperature.h NewPing.h Adafruit_MPU6050.h Adafruit_BMP280.h RTClib.h"
 build_variant() { # variant fqbn
   variant=$1; fqbn=$2; dest="$ROOT/prebuilt/$variant"; mkdir -p "$dest"
   for h in core $HEADERS; do

@@ -18,7 +18,8 @@ RUN arduino-cli core update-index --additional-urls http://drazzy.com/package_dr
  && arduino-cli lib install \
     "Servo@1.3.0" "LiquidCrystal@1.0.7" "Stepper@1.1.3" \
     "Adafruit GFX Library@1.12.6" "Adafruit BusIO@1.17.4" "Adafruit SSD1306@2.5.17" "TM1637@1.2.0" "LedControl@1.0.6" \
-    "DHT sensor library@1.4.7" "Adafruit Unified Sensor@1.1.15" "Adafruit NeoPixel@1.15.5" "OneWire@2.3.8" "DallasTemperature@4.0.6"
+    "DHT sensor library@1.4.7" "Adafruit Unified Sensor@1.1.15" "Adafruit NeoPixel@1.15.5" "OneWire@2.3.8" "DallasTemperature@4.0.6" \
+    "Adafruit MPU6050@2.2.9" "Adafruit BMP280 Library@3.0.0" "RTClib@2.1.4"
 
 COPY --chown=node libraries ./libraries
 COPY --chown=node src ./src
