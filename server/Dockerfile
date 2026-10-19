@@ -12,7 +12,9 @@ ENV HOME=/home/node ARDUINO_UPDATER_ENABLE_NOTIFICATION=false
 WORKDIR /home/node/app
 
 # toolchain + bundled libraries (exact versions; see LICENSES.md)
+COPY --chown=node drop-upload-tools.mjs ./
 RUN arduino-cli core update-index --additional-urls http://drazzy.com/package_drazzy.com_index.json \
+ && node drop-upload-tools.mjs \
  && arduino-cli core install arduino:avr@1.8.8 \
  && arduino-cli core install ATTinyCore:avr@1.5.2 --additional-urls http://drazzy.com/package_drazzy.com_index.json \
  && arduino-cli lib install \
