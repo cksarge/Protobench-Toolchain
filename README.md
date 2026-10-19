@@ -6,6 +6,7 @@ Arduino support:
 | Folder | What it is |
 |---|---|
 | [`server/`](server) | The compile server: a small Node service around `arduino-cli` that turns sketches into firmware. The backup for the in-browser compiler (used on phones and slow devices). |
+| [`microbit/`](microbit) | The micro:bit V2 firmware: MicroPython for micro:bit compiled to WebAssembly (from the micro:bit Foundation's MIT-licensed simulator), with Protobench's hardware layer so pins, buses and the clock connect to Protobench's circuit simulation. |
 | [`wasm/`](wasm) | Build scripts that compile GCC 7.3 (`cc1`, `cc1plus`) and GNU binutils 2.42 (`as`, `ld`) to WebAssembly with Emscripten, plus the sysroot (avr-libc, the Arduino core and libraries, precompiled). Sketches then compile entirely in the browser. |
 
 ## Licenses
@@ -31,3 +32,16 @@ wasm/build-sysroot.sh  # needs arduino-cli with arduino:avr and the bundled libr
 
 Releases (tags `avr-*`) are built by the `build-wasm` workflow and include the complete
 corresponding source alongside the binaries.
+
+## Building the micro:bit firmware
+
+```sh
+. ~/emsdk/emsdk_env.sh && sh microbit/build.sh   # clones the pinned upstream, applies microbit/port, builds
+```
+
+`microbit/port/` holds every file that differs from the upstream simulator
+(see `microbit/versions.sh` for the exact commits): the C hardware layer and its JavaScript
+bridge (simulated time, pins, I²C/SPI/UART, NeoPixel and audio-pin output reach the host),
+delays that sleep in simulated time, and a Makefile without the `speech` module, whose
+synthesizer has no clear license. Releases (tags `microbit-*`) are built by the
+`build-microbit` workflow and include the complete source of the build.

@@ -1,0 +1,58 @@
+name: build-microbit
+# Builds the micro:bit V2 firmware for Protobench: MicroPython for micro:bit (micro:bit Educational
+# Foundation and contributors, MIT) compiled to WebAssembly with Protobench's hardware layer
+# (microbit/port). Pushing a tag like `microbit-mbv2-2.1.1-pb1` publishes a GitHub Release with
+# the firmware and its complete source.
+on:
+  push:
+    tags: ["microbit-*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  EMSDK_VERSION: 6.0.12
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Emscripten ${{ env.EMSDK_VERSION }}
+        run: |
+          git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$HOME/emsdk"
+          "$HOME/emsdk/emsdk" install "$EMSDK_VERSION"
+          "$HOME/emsdk/emsdk" activate "$EMSDK_VERSION"
+
+      - name: Build the firmware
+        run: |
+          . "$HOME/emsdk/emsdk_env.sh"
+          OUT="$PWD/microbit/build/dist" sh microbit/build.sh
+
+      - name: Checksums and notes
+        run: |
+          D=microbit/build/dist
+          cat > "$D/SOURCES.md" <<'NOTES'
+          micro:bit V2 firmware for Protobench: MicroPython for micro:bit v2.1.1 (micro:bit Educational
+          Foundation, Damien P. George and contributors; MIT License) built to WebAssembly from the
+          micro:bit Foundation's simulator, with Protobench's hardware layer (microbit/port, MIT).
+
+          The `speech` module is not included. The complete source of this build (upstream at the
+          pinned commits plus the Protobench changes) is microbit-*-source.tar.gz.
+          NOTES
+          (cd "$D" && sha256sum microbit-* > SHA256SUMS && ls -la)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: microbit-firmware
+          path: microbit/build/dist/
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/microbit-')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: microbit/build/dist/*
+          body_path: microbit/build/dist/SOURCES.md
