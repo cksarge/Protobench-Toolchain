@@ -47,6 +47,8 @@ endif
 JSFLAGS += -s ASYNCIFY
 # We can hit lower values due to user stack use. See stack_size.py example.
 JSFLAGS += -s ASYNCIFY_STACK_SIZE=262144
+# the HAL calls that pause the firmware (marked __async in jshal.js; Emscripten 3.1.25 needs the list)
+JSFLAGS += -s ASYNCIFY_IMPORTS="['mp_js_hal_background','mp_js_hal_idle_until_us','mp_js_hal_pin_write','mp_js_hal_pin_read','mp_js_hal_pin_set_pull','mp_js_hal_pin_read_analog_u10','mp_js_hal_pin_write_analog_u10','mp_js_hal_pin_is_touched']"
 JSFLAGS += -s EXIT_RUNTIME
 JSFLAGS += -s MODULARIZE=1 -s EXPORT_ES6=1
 JSFLAGS += -s EXPORT_NAME=createModule
