@@ -79,7 +79,7 @@ build_variant() { # variant fqbn
       for libdir in "$bp"/libraries/*/; do
         [ -d "$libdir" ] || continue
         lname="$(basename "$libdir")"; objs="$(find "$libdir" -name '*.o')"
-        [ -n "$objs" ] && [ ! -f "$dest/lib$lname.a" ] && "$TC/bin/avr-ar" rcs "$dest/lib$lname.a" $objs
+        if [ -n "$objs" ] && [ ! -f "$dest/lib$lname.a" ]; then "$TC/bin/avr-ar" rcs "$dest/lib$lname.a" $objs; fi
       done
     else
       echo "  $variant: skipping $h (not supported on this board)"
