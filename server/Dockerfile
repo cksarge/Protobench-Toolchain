@@ -12,11 +12,11 @@ ENV HOME=/home/node ARDUINO_UPDATER_ENABLE_NOTIFICATION=false
 WORKDIR /home/node/app
 
 # toolchain + bundled libraries (exact versions; see LICENSES.md)
-COPY --chown=node drop-upload-tools.mjs ./
-RUN arduino-cli core update-index --additional-urls http://drazzy.com/package_drazzy.com_index.json \
- && node drop-upload-tools.mjs \
+# ATTinyCore's board index is vendored (1.5.2 only, no upload tools): its host isn't always reachable
+COPY --chown=node package_attinycore_index.json ./
+RUN arduino-cli core update-index --additional-urls file:///home/node/app/package_attinycore_index.json \
  && arduino-cli core install arduino:avr@1.8.8 \
- && arduino-cli core install ATTinyCore:avr@1.5.2 --additional-urls http://drazzy.com/package_drazzy.com_index.json \
+ && arduino-cli core install ATTinyCore:avr@1.5.2 --additional-urls file:///home/node/app/package_attinycore_index.json \
  && arduino-cli lib install \
     "Servo@1.3.0" "LiquidCrystal@1.0.7" "Stepper@1.1.3" \
     "Adafruit GFX Library@1.12.6" "Adafruit BusIO@1.17.4" "Adafruit SSD1306@2.5.17" "TM1637@1.2.0" "LedControl@1.0.6" \
