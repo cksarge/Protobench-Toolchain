@@ -12,7 +12,9 @@ permissions:
   contents: write
 
 env:
-  EMSDK_VERSION: 6.0.12
+  # the version the micro:bit Foundation builds its simulator with (newer releases broke
+  # MicroPython `for` loops under Asyncify: their iterators were corrupted after a pause)
+  EMSDK_VERSION: 3.1.25
 
 jobs:
   build:
